@@ -8,11 +8,12 @@ This is a port of the previous repo [PowerDisplayHomeAssistant](https://github.c
 
 **Note:** The ESPHome version requires an ESP32 microcontroller, as the ESPHome ILI9341 library seems to require more memory than is available in a Wemos D1 mini.
 
+**Note:** The ESP32-S2mini version uses a st7789v based display, where no brightness control exists. 
 
 
 ![alt text](https://github.com/johannyren/PowerDisplayESPHome/blob/main/images/Display1.jpg?raw=true)
 
-The hardware consists of an ESP32 and an ILI9341 display.
+The hardware consists of an ESP32 and an ILI9341 display - or and ESP32-S2mini and a st7789v display.
 
 ## Wiring of the ILI9341:
 
@@ -48,6 +49,7 @@ Use the file power-display-esphome.yaml to create your ESPHome entity.
 Data sources from Home Assistant are defined in power-display-esphome.yaml
 
 It will require the HomeAssistant integration with NordPool (https://github.com/custom-components/nordpool), as well as a device that can read the current power usage from the power meter. 
+For the ESP32-S2mini, the Energi Data Service HACS integration is needed.
 
 ### Popular ESPHome implementations are:
 
@@ -62,7 +64,7 @@ The implementation also expects a Utility Meter entity in Home Assistant. The fo
    cycle: daily
 ```
 
-## Backlight entity
+## Backlight entity (ILI9341 only)
 PowerDisplayESPHome creates an entity in Home Assistant that can be used to control the brightness of the display, or turn it off with a schedule etc.
 
 ![alt text](https://github.com/johannyren/PowerDisplayESPHome/blob/main/images/Backlight_entity.jpg?raw=true)
