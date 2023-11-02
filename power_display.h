@@ -2,20 +2,20 @@
 #include "esphome.h"
 #include "Preferences.h"
 
-// Define the price levels (SEK/kWh)
-#define BELOW_VERY_CHEAP_TEXT "Jättebilligt"
+// Define the price levels (DKK/kWh)
+#define BELOW_VERY_CHEAP_TEXT "Vildt billigt"
 #define VERY_CHEAP 0.5
-#define VERY_CHEAP_TEXT "Mycket billigt"
+#define VERY_CHEAP_TEXT "Meget billigt"
 #define CHEAP 1.0
 #define CHEAP_TEXT "Billigt"
 #define NORMAL 1.5
 #define NORMAL_TEXT "Normalt"
-#define EXPENSIVE 3.0
+#define EXPENSIVE 2.5
 #define EXPENSIVE_TEXT "Dyrt"
-#define VERY_EXPENSIVE 4.0
-#define VERY_EXPENSIVE_TEXT "Mycket dyrt"
-#define EXTREMELY_EXPENSIVE 5.0
-#define EXTREMELY_EXPENSIVE_TEXT "Extremt dyrt"
+#define VERY_EXPENSIVE 3.5
+#define VERY_EXPENSIVE_TEXT "Meget dyrt"
+#define EXTREMELY_EXPENSIVE 4.8
+#define EXTREMELY_EXPENSIVE_TEXT "Vildt dyrt"
 
 // Global functions to save and retrieve values from NVM, to survive a reboot
 
@@ -54,7 +54,7 @@ String LoadStringFromNvm(String key) {
 }
 
 // Global variables. Needed to retain values after reboot
-double currentPower, currentPrice, todayMaxPrice, dailyEnergy;
+double currentPower, currentPrice, todayMaxPrice, dailyEnergy, dailyCharge;
 String TodaysPrices;
 
 void SaveValuesToNVM () {
@@ -134,12 +134,18 @@ public:
 		}
 	}
 	
+	void SetTodayDailyCharge(double price) {
+		if (!isnan(price)) {
+			dailyCharge = price;
+		}
+	}
 	void SetTodayMaxPrice(double price) {
 		if (!isnan(price) || price == 0) {
 			todayMaxPrice = price;
 		}
 	}
-	
+
+		
 	void SetTodaysPrices(String prices) {
 		if (prices != "") {
 			TodaysPrices = prices;
@@ -194,7 +200,7 @@ public:
 			dailyEnergy = LoadValueFromNvm("DailyEnergy");		
 		}
 		buff->printf(x, y, &id(energy_text), color, TextAlign::BASELINE_CENTER, "Idag: %.1f kWh", dailyEnergy);
-		buff->printf(x, y+23, &id(energy_text), color, TextAlign::BASELINE_CENTER, "Kostnad: %.2f kr", CalculateAccumulatedCost(currentPrice, dailyEnergy));				
+		buff->printf(x, y+23, &id(energy_text), color, TextAlign::BASELINE_CENTER, "Samlet: %.2f kr", dailyCharge);				
 	}
 
 	// Draw the graph
@@ -315,11 +321,3 @@ private:
 
 
 }; //class
-
-
-
-
-
-
-
-
