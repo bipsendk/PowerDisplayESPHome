@@ -13,7 +13,7 @@ This is a port of the previous repo [PowerDisplayHomeAssistant](https://github.c
 
 ![alt text](https://github.com/johannyren/PowerDisplayESPHome/blob/main/images/Display1.jpg?raw=true)
 
-The hardware consists of an ESP32 and an ILI9341 display - or and ESP32-S2mini and a st7789v display.
+The hardware consists of an ESP32 and an ILI9341 display - or an ESP32-S2mini and a st7789v display.
 
 ## Wiring of the ILI9341:
 
