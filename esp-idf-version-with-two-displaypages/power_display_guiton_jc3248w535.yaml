@@ -27,7 +27,6 @@ psram:
 
 # Enable logging
 logger:
-  level: DEBUG
   baud_rate: 921600
 
 api:
