@@ -1,0 +1,58 @@
+Guiton display was purchased at: https://www.aliexpress.com/item/1005007566315926.html
+
+Connector for power (to avoid USB-C plug on the back) was purchased at (4P): https://www.aliexpress.com/item/1005004587466608.html
+
+
+Template sensor to be created in order to utilize the Guiton display with EV charge indicator:
+
+sensor.ev_smart_charge_stop_time_index
+
+{% set dt_str = state_attr('sensor.ev_smart_charging_charging', 'charging_stop_time') %}
+          {% if dt_str %}
+            {% set dt = as_datetime(dt_str) %}
+            {% if dt %}
+              {% set now = now().replace(hour=0, minute=0, second=0, microsecond=0) %}
+              {% set tomorrow = now + timedelta(days=1) %}
+              {% if dt.date() == now.date() %}
+                {{ ((dt - now).total_seconds() / 900) | int }}
+              {% elif dt.date() == tomorrow.date() %}
+                {{ ((dt - now).total_seconds() / 900) | int }}
+              {% else %}
+                -1
+              {% endif %}
+            {% else %}
+              -1
+            {% endif %}
+          {% else %}
+            -1
+          {% endif %}
+
+
+sensor.ev_smart_charge_start_time_index
+
+{% set dt_str = state_attr('sensor.ev_smart_charging_charging', 'charging_start_time') %}
+          {% if dt_str %}
+            {% set dt = as_datetime(dt_str) %}
+            {% if dt %}
+              {% set now = now().replace(hour=0, minute=0, second=0, microsecond=0) %}
+              {% set tomorrow = now + timedelta(days=1) %}
+              {% if dt.date() == now.date() %}
+                {{ ((dt - now).total_seconds() / 900) | int }}
+              {% elif dt.date() == tomorrow.date() %}
+                {{ ((dt - now).total_seconds() / 900) | int }}
+              {% else %}
+                -1
+              {% endif %}
+            {% else %}
+              -1
+            {% endif %}
+          {% else %}
+            -1
+          {% endif %}
+
+I have this in configuration.yaml (can probably be added as template sensor via GUI as well)
+
+  - sensor:
+    - name: energy_max_price
+      unique_id: energy_max_price
+      state: "{{ states.sensor.energi_data_service.attributes.today_max.price }}"
