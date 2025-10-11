@@ -58,3 +58,110 @@ I have this in configuration.yaml (can probably be added as template sensor via 
     - name: energy_max_price
       unique_id: energy_max_price
       state: "{{ states.sensor.energi_data_service.attributes.today_max.price }}"
+
+
+
+
+
+My automation to update thresholds for summer/winter tarriffs - could probably be done better, as this one only checks once per day:
+
+alias: Skift El Tariffer
+description: ""
+triggers:
+  - at: "00:00:00"
+    trigger: time
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: binary_sensor.energysummertariffs
+            state: "on"
+        sequence:
+          - metadata: {}
+            data:
+              value: "0.5"
+            target:
+              entity_id:
+                - number.jc3248w535_02_very_cheap
+            action: number.set_value
+          - metadata: {}
+            data:
+              value: "0.85"
+            target:
+              entity_id:
+                - number.jc3248w535_04_cheap
+            action: number.set_value
+          - metadata: {}
+            data:
+              value: "1.45"
+            target:
+              entity_id:
+                - number.jc3248w535_06_normal
+            action: number.set_value
+          - metadata: {}
+            data:
+              value: "1.8"
+            target:
+              entity_id:
+                - number.jc3248w535_08_expensive
+            action: number.set_value
+          - metadata: {}
+            data:
+              value: "2.4"
+            target:
+              entity_id:
+                - number.jc3248w535_10_very_expensive
+            action: number.set_value
+          - metadata: {}
+            data:
+              value: "3.0"
+            target:
+              entity_id:
+                - number.jc3248w535_12_extremely_expensive
+            action: number.set_value
+      - conditions:
+          - condition: state
+            entity_id: binary_sensor.energysummertariffs
+            state: "off"
+        sequence:
+          - metadata: {}
+            data:
+              value: "0.5"
+            target:
+              entity_id:
+                - number.jc3248w535_02_very_cheap
+            action: number.set_value
+          - metadata: {}
+            data:
+              value: "1.0"
+            action: number.set_value
+            target:
+              entity_id: number.jc3248w535_04_cheap
+          - metadata: {}
+            data:
+              value: "1.6"
+            action: number.set_value
+            target:
+              entity_id: number.jc3248w535_06_normal
+          - metadata: {}
+            data:
+              value: "2.2"
+            action: number.set_value
+            target:
+              entity_id: number.jc3248w535_08_expensive
+          - metadata: {}
+            data:
+              value: "3.0"
+            action: number.set_value
+            target:
+              entity_id: number.jc3248w535_10_very_expensive
+          - metadata: {}
+            data:
+              value: "4"
+            action: number.set_value
+            target:
+              entity_id: number.jc3248w535_12_extremely_expensive
+mode: single
+
+
