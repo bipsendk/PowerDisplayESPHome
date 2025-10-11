@@ -2,8 +2,10 @@ Guiton display was purchased at: https://www.aliexpress.com/item/100500756631592
 
 Connector for power (to avoid USB-C plug on the back) was purchased at (4P): https://www.aliexpress.com/item/1005004587466608.html
 
+EV Smart Charging integration for Home Assistant: https://github.com/jonasbkarlsson/ev_smart_charging/
 
-Template sensor to be created in order to utilize the Guiton display with EV charge indicator:
+
+Template sensors to be created in order to utilize the Guiton display with EV charge indicator (done via ChatGPT, could probably be created better by more experienced people):
 
 sensor.ev_smart_charge_stop_time_index
 
