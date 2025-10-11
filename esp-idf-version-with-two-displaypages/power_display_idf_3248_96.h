@@ -1,12 +1,14 @@
-#include <sstream>
+include <sstream>
 #include <numeric>
 #include "esphome.h"
 
 // Global variables. Needed to retain values after reboot
 double currentPower, currentPrice, todayMaxPrice, dailyEnergy, dailyCharge, tomorrowsMaxPrice, tomorrowsMinPrice, tomorrowsAverage;
-std::string TodaysPrices, TomorrowsPrices;
-	double priceArray[100];
-	double priceArrayTomorrow[100];	
+int evChargeStartIdx,evChargeStopIdx;
+std::string TodaysPrices, TomorrowsPrices, evChargePlanned;
+double priceArray[100];
+double priceArrayTomorrow[100];	
+float xFactor, yFactor, xFactorGrid;
 
 // PowerDisplay class:
 class PowerDisplay : public Component {
@@ -25,7 +27,13 @@ public:
 		setWidth(width);
 		setHeigh(height);		
 		buff->rectangle(x, y, width, height, color);
+
 	}
+
+	void MarkEvCharge (display::Display *buff, double x, double y, double startIdx, double stopIdx, double height, Color color = COLOR_ON) {
+		buff->filled_rectangle(x+(xFactor*startIdx),y-height,(xFactor*(stopIdx-startIdx)),height,color);
+	}
+
 
 	void SetGraphScale (double xMin, double  xMax, double yMin) {		
 		double  yMax = todayMaxPrice;
@@ -99,12 +107,28 @@ public:
 
 	void SetTomorrowsPrices(std::string prices) {
 			TomorrowsPrices = prices;
-		}
-		
+	}
+
 	void WriteDailyEnergy(double energy) {
 		if (!isnan(energy)) {
 			dailyEnergy = energy;
 		}
+	}
+	
+	void SetEvChargeStartTime(int startIndex) {
+		if (!isnan(startIndex)) {
+			evChargeStartIdx = startIndex;
+		}
+	}
+
+	void SetEvChargeStopTime(int stopIndex) {
+		if (!isnan(stopIndex)) {
+			evChargeStopIdx = stopIndex;
+		}
+	}
+
+	void SetEvChargePlanned(std::string chargePlanned) {
+			evChargePlanned = chargePlanned;
 	}
 
 
@@ -302,7 +326,6 @@ private:
 	display::Display *vbuff;
 	
 	int graphWidth, graphHeight, xPos, yPos;
-	float xFactor, yFactor, xFactorGrid;
 	
 	double prevDailyEnergy, accumulatedCost;
 	int NumPricesToday,NumPricesTomorrow;
@@ -356,15 +379,5 @@ private:
 	{
 	  return ((minimum <= val) && (val <= maximum));
 	}
-	
-
-
 
 }; //class
-
-
-
-
-
-
-
